@@ -102,12 +102,74 @@
           <button type="button" id="next" class="primary">Next room →</button>
         </section>
 
-        <section class="panel">
-          <h3>Hints</h3>
-          <ol id="hints" class="hints"></ol>
-          <button type="button" id="hint" class="console-button">Show a hint</button>
+        <section class="panel" id="inspector-panel">
+          <h3>Inspector</h3>
+          <p id="inspector-locked" class="muted">Locked. Escape this room to see how the assistant decided — every rule, in order.</p>
+          <div id="inspector"></div>
         </section>
       </div>
+
+      <div id="defend-console" hidden>
+        <section class="panel">
+          <p class="eyebrow">You write the defence</p>
+          <h2>5 · Defend</h2>
+          <p class="owasp">LLM01:2025 — prevention and mitigation</p>
+          <p id="d-brief"></p>
+        </section>
+
+        <section class="panel">
+          <h3>System prompt</h3>
+          <pre id="d-prompt" class="prompt"></pre>
+        </section>
+
+        <form id="defence-form" class="defence-form">
+          <section class="panel">
+            <h3>Input guards</h3>
+            <label class="field" for="d-blocklist">Blocklist <small>words or phrases, one per line, matched at the start of a word</small></label>
+            <textarea id="d-blocklist" rows="3" spellcheck="false" placeholder="e.g. password"></textarea>
+            <label class="field" for="d-regex">Regex rules <small>one per line, case-insensitive</small></label>
+            <textarea id="d-regex" rows="2" spellcheck="false" placeholder="e.g. ignore .{0,20}instructions"></textarea>
+            <label class="check"><input type="checkbox" id="d-normalizeUnicode"> <span>Fold look-alike letters and strip invisible characters before checking</span></label>
+            <label class="check"><input type="checkbox" id="d-decodeObfuscation"> <span>Decode leetspeak, spaced-out letters and Base64 before checking</span></label>
+          </section>
+          <section class="panel">
+            <h3>Context</h3>
+            <label class="check"><input type="checkbox" id="d-hardenedPrompt"> <span>Harden the system prompt: refuse instruction overrides, claims of authority and role-play around the secret</span></label>
+            <label class="check"><input type="checkbox" id="d-segregateDocuments"> <span>Treat pasted documents as data to summarise, never as instructions</span></label>
+          </section>
+          <section class="panel">
+            <h3>Output guards</h3>
+            <label class="check"><input type="checkbox" id="d-redactExact"> <span>Redact the secret from replies</span></label>
+            <label class="check"><input type="checkbox" id="d-redactEncoded"> <span>Also withhold replies with the secret spelled out, reversed or in Base64</span></label>
+          </section>
+          <section class="panel">
+            <button type="submit" id="run-battery" class="run">Run the red-team battery</button>
+            <p class="small" id="battery-size"></p>
+          </section>
+        </form>
+
+        <section class="panel battery" id="battery-result" aria-live="polite" hidden></section>
+
+        <section class="panel escaped" id="d-escaped" hidden>
+          <h3>Defended</h3>
+          <p id="d-lesson"></p>
+        </section>
+      </div>
+
+      <section class="panel">
+        <h3>Hints</h3>
+        <ol id="hints" class="hints"></ol>
+        <button type="button" id="hint" class="console-button">Show a hint</button>
+      </section>
+
+      <section class="panel share" id="share-panel" hidden>
+        <h3>Share</h3>
+        <div class="share-row">
+          <input id="share-text" readonly aria-label="Share line">
+          <button type="button" id="copy-share" class="console-button">Copy</button>
+        </div>
+        <p id="share-status" class="feedback" role="status"></p>
+      </section>
 
       <section class="panel stats">
         <span>messages this room <b id="msg-count">0</b></span>

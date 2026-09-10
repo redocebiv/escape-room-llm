@@ -108,6 +108,15 @@ test('hardening plus segregation passes, but other languages still get through',
   assert.ok(r.attacks.results.filter((a) => a.leaked).every((a) => a.technique === 'multilingual'));
 });
 
+test('every result carries what the report needs to show it', () => {
+  const r = runBattery(DEFAULT_DEFENCE, corpus, SECRET);
+  for (const a of r.attacks.results) {
+    assert.ok(Array.isArray(a.turns) && a.turns.length >= 1, a.id);
+    assert.equal(typeof a.reply, 'string', a.id);
+  }
+  for (const b of r.benign.results) assert.equal(typeof b.text, 'string', b.id);
+});
+
 test('results are grouped by technique', () => {
   const r = runBattery(REFERENCE, corpus, SECRET);
   const total = Object.values(r.attacks.byTechnique).reduce((n, t) => n + t.total, 0);

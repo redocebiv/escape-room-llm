@@ -73,7 +73,7 @@ export function runBattery(options, corpus, secret) {
       last = respond(level, turn, session);
       leaked = leaked || last.leaked;
     }
-    return { id: attack.id, technique: attack.technique, mutation: attack.mutation, leaked, reply: last.reply, trace: last.trace };
+    return { id: attack.id, technique: attack.technique, mutation: attack.mutation, turns: attack.turns, leaked, reply: last.reply, trace: last.trace };
   });
 
   const benign = corpus.benign.map((request) => {

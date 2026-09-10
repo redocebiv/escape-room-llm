@@ -295,6 +295,91 @@ mark.redacted {
 .stats { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--con-muted); font-size: 12px; }
 .stats b { color: #fff; }
 
+.muted { color: var(--con-muted); }
+
+/* --- inspector ----------------------------------------------------------------- */
+
+.trace { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font: 12px/1.45 var(--mono); }
+.trace .step { display: grid; grid-template-columns: 14px 104px minmax(0, 1fr); gap: 6px; align-items: baseline; }
+.trace .stage { color: var(--con-muted); }
+.trace .detail { overflow-wrap: anywhere; }
+.trace .mark { text-align: center; }
+.trace .pass .mark { color: var(--green); }
+.trace .blocked .mark, .trace .blocked .detail { color: var(--red); }
+.trace .warn .mark { color: var(--amber); }
+.trace .leak .mark, .trace .leak .detail { color: var(--red); font-weight: 700; }
+.trace .info .mark { color: var(--con-muted); }
+.inspector-for { color: var(--con-muted); font-style: italic; margin-top: 0 !important; }
+
+/* The same trace, under a chat reply: a small dark card inside the light app. */
+.why { align-self: stretch; }
+.why summary {
+  font-size: 12px; color: var(--muted); cursor: pointer; padding: 0 4px; list-style: none;
+}
+.why summary::-webkit-details-marker { display: none; }
+.why summary::before { content: '▸ '; }
+.why[open] summary::before { content: '▾ '; }
+.why .trace {
+  margin-top: 6px; background: var(--con-bg); color: var(--con-ink); border-radius: 10px; padding: 10px 12px;
+}
+
+/* --- defence builder ----------------------------------------------------------- */
+
+.defence-form .field { display: block; margin: 10px 0 4px; font-family: var(--sans); font-size: 13px; }
+.defence-form .field:first-of-type { margin-top: 0; }
+.defence-form small { color: var(--con-muted); font-size: 12px; margin-left: 4px; }
+.defence-form textarea {
+  width: 100%; resize: vertical; background: var(--con-panel); color: #fff; border: 1px solid var(--con-line);
+  border-radius: 8px; padding: 8px 10px; font: 13px/1.4 var(--mono);
+}
+.defence-form textarea:focus { outline: none; border-color: var(--blue); }
+.check {
+  display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; align-items: start;
+  margin: 10px 0 0; font-family: var(--sans); font-size: 14px; cursor: pointer;
+}
+.check input { margin: 3px 0 0; accent-color: var(--green); width: 16px; height: 16px; }
+.run {
+  width: 100%; border: 0; border-radius: 10px; padding: 11px 16px; font: 600 14px var(--mono);
+  background: var(--green); color: #04130a;
+}
+.run:hover { filter: brightness(1.1); }
+.small { color: var(--con-muted); font-size: 12px !important; }
+
+.battery { display: grid; gap: 12px; }
+.verdict { font: 700 15px var(--sans) !important; margin: 0 !important; }
+.verdict.pass { color: var(--green); }
+.verdict.fail { color: var(--amber); }
+.meter-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 5px; font-size: 12px; }
+.meter-top b { color: #fff; }
+.meter-top small { margin-left: auto; color: var(--con-muted); }
+.bar { position: relative; height: 8px; border-radius: 4px; background: var(--con-line); }
+.bar i { position: absolute; inset: 0 auto 0 0; border-radius: 4px; background: var(--amber); }
+.meter.ok .bar i { background: var(--green); }
+.bar .need { position: absolute; top: -3px; bottom: -3px; width: 2px; background: #fff; opacity: 0.7; }
+
+.by-technique { width: 100%; border-collapse: collapse; font-size: 12px; }
+.by-technique th { text-align: left; color: var(--con-muted); font-weight: 500; padding: 4px 0; }
+.by-technique td { padding: 4px 0; border-top: 1px solid var(--con-line); }
+.by-technique td:last-child, .by-technique th:last-child { text-align: right; }
+.by-technique tr.short td:last-child { color: var(--amber); }
+.by-technique tr.ok td:last-child { color: var(--green); }
+
+.list summary { cursor: pointer; color: #fff; }
+.items { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 10px; }
+.items li { font-family: var(--sans); font-size: 13px; }
+.item-meta { color: var(--con-muted); font: 11px var(--mono); }
+.item-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.item-reply { color: var(--con-muted); overflow-wrap: anywhere; }
+.items .try { margin-top: 4px; padding: 3px 8px; font-size: 11px; }
+
+/* --- share --------------------------------------------------------------------- */
+
+.share-row { display: flex; gap: 8px; }
+.share-row input {
+  flex: 1; min-width: 0; background: var(--con-panel); color: var(--con-ink); border: 1px solid var(--con-line);
+  border-radius: 8px; padding: 8px 10px; font: 12px var(--mono);
+}
+
 /* --- footer -------------------------------------------------------------------- */
 
 .footer {
