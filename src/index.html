@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prompt Injection Escape Room</title>
+  <meta name="description" content="Five rooms, one secret each. Talk a guarded chat assistant out of its password using real prompt-injection techniques from OWASP LLM01, then build a defence of your own.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230e1116'/%3E%3Cpath d='M11 14v-3a5 5 0 0 1 10 0v3' stroke='%233fb950' stroke-width='2.5' fill='none'/%3E%3Crect x='8' y='14' width='16' height='11' rx='2' fill='%233fb950'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"></span>
+      <div>
+        <h1>Prompt Injection Escape Room</h1>
+        <p class="tagline">Get the password out of the assistant. Every room adds a real defence.</p>
+      </div>
+      <button type="button" id="about" class="link-button">About</button>
+    </div>
+    <nav id="rooms" class="rooms" aria-label="Rooms"></nav>
+  </header>
+
+  <section id="intro" class="intro" hidden aria-labelledby="intro-title">
+    <div class="intro-card">
+      <h2 id="intro-title">Talk your way out.</h2>
+      <p>Each room has a chat assistant guarding a password. Get it to tell you, type the password into the unlock box, and the next room opens — with a new defence you’ll have to get around.</p>
+      <ul>
+        <li>Every room teaches one prompt-injection technique from <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" rel="noopener">OWASP LLM01:2025</a>.</li>
+        <li>The last room flips it: you build the defence, and a red-team battery of attacks tries to break it.</li>
+        <li><strong>The assistant is not a language model.</strong> It’s a deterministic rule engine written in JavaScript, built to fall for the same tricks real models fall for. Escape a room and you can see every rule it used.</li>
+      </ul>
+      <p class="credit">The “get the password” format comes from Lakera’s <a href="https://gandalf.lakera.ai/" rel="noopener">Gandalf</a>. Go play that too.</p>
+      <button type="button" id="start" class="primary">Enter room 1</button>
+    </div>
+  </section>
+
+  <main class="game">
+    <section class="chat" aria-label="Chat with the assistant">
+      <header class="chat-head">
+        <span class="avatar" id="avatar" aria-hidden="true">P</span>
+        <div class="who">
+          <strong id="persona-name">Pip</strong>
+          <span id="persona-role"></span>
+        </div>
+        <span class="online">online</span>
+      </header>
+      <ol id="messages" class="messages" role="log" aria-live="polite" aria-label="Conversation"></ol>
+      <div id="locked" class="locked" hidden>
+        <p id="locked-text"></p>
+        <button type="button" id="open-anyway" class="secondary">Open it anyway</button>
+      </div>
+      <form id="composer" class="composer">
+        <label class="visually-hidden" for="input">Message</label>
+        <textarea id="input" rows="1" placeholder="Message Pip…" autocomplete="off" spellcheck="false"></textarea>
+        <button type="submit" id="send" class="send" aria-label="Send">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 21 3l-8.5 18-2.2-7.3L3 11.5Z" fill="currentColor"/></svg>
+        </button>
+      </form>
+      <p class="composer-hint">Enter to send · Shift+Enter for a new line</p>
+    </section>
+
+    <aside class="console" aria-label="Security console">
+      <div class="console-bar">
+        <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>security-console — room <b id="room-no">1</b></span>
+      </div>
+
+      <div id="attack-console">
+        <section class="panel">
+          <p class="eyebrow" id="technique"></p>
+          <h2 id="level-name"></h2>
+          <p class="owasp" id="owasp"></p>
+          <p id="brief"></p>
+        </section>
+
+        <section class="panel">
+          <h3>System prompt</h3>
+          <pre id="system-prompt" class="prompt"></pre>
+        </section>
+
+        <section class="panel">
+          <h3>Defences</h3>
+          <ul id="defences" class="defences"></ul>
+        </section>
+
+        <section class="panel" id="unlock-panel">
+          <h3>Unlock</h3>
+          <form id="unlock" class="unlock">
+            <label class="visually-hidden" for="guess">Password</label>
+            <input id="guess" placeholder="type the password" autocomplete="off" spellcheck="false" autocapitalize="characters">
+            <button type="submit">Unlock</button>
+          </form>
+          <p id="unlock-feedback" class="feedback" role="status"></p>
+        </section>
+
+        <section class="panel escaped" id="escaped" hidden>
+          <h3>Escaped</h3>
+          <p id="lesson"></p>
+          <button type="button" id="next" class="primary">Next room →</button>
+        </section>
+
+        <section class="panel">
+          <h3>Hints</h3>
+          <ol id="hints" class="hints"></ol>
+          <button type="button" id="hint" class="console-button">Show a hint</button>
+        </section>
+      </div>
+
+      <section class="panel stats">
+        <span>messages this room <b id="msg-count">0</b></span>
+        <span>rooms escaped <b id="escaped-count">0</b>/4</span>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <p>The assistant is a deterministic rule engine, not a language model — the techniques are real, the model is not. Techniques follow <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/" rel="noopener">OWASP LLM01:2025</a>. Format inspired by Lakera’s <a href="https://gandalf.lakera.ai/" rel="noopener">Gandalf</a>.</p>
+    <p><a href="https://github.com/redocebiv/escape-room-llm" rel="noopener">Source on GitHub</a> · <button type="button" id="reset" class="link-button">Reset progress</button></p>
+  </footer>
+</body>
+</html>
