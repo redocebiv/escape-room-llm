@@ -119,6 +119,7 @@ test.describe('room 5', () => {
     await page.locator('#run-battery').click();
     await expect(page.locator('.verdict')).toHaveClass(/fail/);
     await expect(page.locator('#got-through summary')).toContainText('What got through (');
+    await expect(page.locator('#battery-result')).not.toContainText('null');
 
     await page.locator('#d-blocklist').fill('password');
     await page.locator('#run-battery').click();

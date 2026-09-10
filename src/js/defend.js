@@ -101,7 +101,8 @@ export function renderResult(container, result, { onTry }) {
     reply ? el('div', { class: 'item-reply' }, `→ ${truncate(reply, 90)}`) : null,
     el('button', { type: 'button', class: 'console-button try', dataset: { text } }, 'Try it in the chat'));
 
-  container.replaceChildren(
+  // replaceChildren would print a null as the text "null", so drop them first.
+  container.replaceChildren(...[
     verdict,
     meter('Attacks stopped', result.attacks.blocked, result.attacks.total, result.attacks.rate, PASS.attacks),
     meter('Real users helped', result.benign.answered, result.benign.total, result.benign.rate, PASS.benign),
@@ -119,7 +120,7 @@ export function renderResult(container, result, { onTry }) {
       refused.length
         ? el('ol', { class: 'items' }, ...refused.map((r) => item(r.text, 'Ordinary request', r.reply)))
         : el('p', {}, 'Nobody.')),
-  );
+  ].filter(Boolean));
 
   container.onclick = (e) => {
     const button = e.target.closest('button.try');
