@@ -1,0 +1,18 @@
+{
+  "name": "escape-room-llm",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A prompt-injection escape room: break four guarded assistants, then build the defence",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/unit/*.test.mjs",
+    "fuzz": "python3 scripts/fuzz_attacks.py",
+    "e2e": "playwright test",
+    "serve": "python3 scripts/serve_dist.py 4173"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "esbuild": "0.28.2"
+  }
+}

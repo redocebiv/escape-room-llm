@@ -1,0 +1,5 @@
+# The Python side of the project: the attack-corpus fuzzer and its tests.
+# testpaths keeps pytest out of node_modules.
+[tool.pytest.ini_options]
+testpaths = ["tests/python"]
+addopts = "-q"
